@@ -13,8 +13,6 @@
 				text-decoration:none;
 				 color:black;
 			}
-			 
-			div{ float:left} 
 		</style>
         <noscript>
 			<link rel="stylesheet" href="css/skel.css" />
@@ -23,7 +21,7 @@
 		</noscript>
 		<script>
 			var nowPage, totalPage;
-			//each page comtains 8 data, start with 0
+			//each page comtains 6 data, start with 0
 			var table;
 			function nextPage(){
 				if(nowPage == totalPage);
@@ -73,19 +71,22 @@
 			
 			function ListaPage(){
 				var str ="";
-				for(var i = 0 + (nowPage * 8); i < 8 + (nowPage * 8); i++){
+				for(var i = 0 + (nowPage * 6); i < 6 + (nowPage * 6); i++){
 					var website = items[i].Website;
 					var address = items[i].Add;
 					var telphone =items[i].Tel;
 					var name = items[i].Name;
 					var pictureURL = items[i].Picture1;
-					if(i % 4 == 0) str += '<tr>';
-					str += '<td align="left">'+'<a href="javascript: void(0)" onclick="getInformation(' + i + ')" >';
-					str += '<img id="hotel_pic_' + i + '" src=' + pictureURL + ' width="320" height="240" alt="ㄅ、ㄅ欠～ㄇu照片喔"><br>';
-					str += '<font id="hotel_name_' + i + '" size="5">' + name + '</font><br><font id="hotel_address_' + i + '">';
-					str += address + '</font></a></td>';
+				
+					if(i % 3 == 2) str += '<div class="4u$ 4u$(medium)">';
+					else str += '<div class="4u 4u$(medium)">';
 					
-					if(i % 4 == 3) str += '</tr>';
+					str += '<section class="box"><a href="javascript: void(0)" onclick="getInformation(' + i + ')" >';
+					str += '<img id="hotel_pic_' + i + '" src=' + pictureURL + ' width="320" height="240" alt="ERR"><br>';
+					str += '<h3 id="hotel_name_' + i + '" >' + name + '</h3><br><h4="hotel_address_' + i + '">';
+					str += address + '</h4></a></section>';
+					
+					 str += '</div>';
 				}
 				
 				table.innerHTML = str;
@@ -101,7 +102,7 @@
 					success: function(data) {
 						table = document.getElementById('hoteltable');
 						items = data.Infos.Info;
-						totalPage = items.length / 8;
+						totalPage = items.length / 6;
 						nowPage = 0;
 						ListaPage();
 					 },
@@ -113,7 +114,7 @@
 	</head>
 	<body>
         <div>
-            <table id="hoteltable"></table>
+            <div class="row 150%" id="hoteltable"></div>
         </div>
         <br>
         <br>
@@ -127,7 +128,7 @@
         </div>
         
         <br>
- 	<div style = " width: 640px;">
+ 	<div style = "float:left; width: 600px;">
             <a href="javascript: void(0)" id="web"><h2 id="name">Choose a Hotel</h2></a>
             
             <h3> Address: </h3><p id="address"></p>
@@ -138,7 +139,7 @@
         
         <iframe id='maps' src="http://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q=&z=16&output=embed&t=" width="600" height="600" frameborder="0" style="border: 0; text-align: right;" allowfullscreen></iframe>
         	
-   	<div class="4u"><span class="image fit">
+   			<div style="float:left;" class="4u"><span class="image fit">
             	<!--<a id="picURL_1">-->
                 	<img src="" id="pic1" alt="ERR">
                 <!--</a>-->
@@ -146,20 +147,20 @@
                 <p id="pic1_txt" align="center"></p>
                 </span>
             </div>
-			<div class="4u"><span class="image fit">
+			<div style="float:left;" class="4u"><span class="image fit">
             	<!--<a id="picURL_2">-->
                 	<img src="" id="pic2" alt="ERR">
                 <!--</a>-->
                 <br>
-                <lable id="pic2_txt" align="center"></lable>
+                <p id="pic2_txt" align="center"></p>
                 </span>
             </div>
-			<div class="4u$"><span class="image fit">
+			<div style="float:left;" class="4u$"><span class="image fit">
             	<!--<a id="picURL_3">-->
           			<img src="" id="pic3" alt="ERR">
             	<!--</a>-->
             	<br>
-            	<lable id="pic3_txt" align="center"></lable>
+            	<p id="pic3_txt" align="center"></p>
                 </span>
             </div>
 	</body>

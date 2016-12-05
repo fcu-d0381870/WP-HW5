@@ -1,34 +1,166 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<title>Exercise 1</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-<script>
-
-$(function(){
-	$.ajax({
-		url: "http://140.134.26.71:58080/web-prog/Hotels",
-		type: "GET",
-		dataType: "json",
-		success: function(data){
-			var items = data.Infos.Info;
-			for(var i = 0; i < items.length; i++){
-				var name = items[i].Name;
-				var imgURL = items[i].Picture1;
-				$("#attractions").append('<div>' + items[i].Name + '</div><div><img src="' + imgURL + '" height="200" width"200"></div>');
+	<head>
+		<meta charset="utf-8">
+		<title>Exercise 1</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+        <script src="js/jquery.min.js"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-layers.min.js"></script>
+		<script src="js/init.js"></script>
+        <style>
+			a {
+				text-decoration:none;
+				 color:black;
 			}
-		},
-		erro: function(){
-		}
-	});
-});
-</script>
-</head>
-<body>
-	<div id="attractions">
-	</div>
-</body>
+			 
+			div{ float:left} 
+		</style>
+        <noscript>
+			<link rel="stylesheet" href="css/skel.css" />
+			<link rel="stylesheet" href="css/style.css" />
+			<link rel="stylesheet" href="css/style-xlarge.css" />
+		</noscript>
+		<script>
+			var nowPage, totalPage;
+			//each page comtains 8 data, start with 0
+			var table;
+			function nextPage(){
+				if(nowPage == totalPage);
+				else{
+					nowPage += 1;
+					ListaPage();	
+				}
+			}
+			
+			function lastPage(){
+				if(nowPage == 0);	
+				else{
+					nowPage -= 1;
+					ListaPage();
+				}
+			}
+			
+			function getInformation(i){
+				var map = document.getElementById('maps');
+				var url = 'http://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q=';
+				url += items[i].Add +'&z=16&output=embed&t=';
+				map.src = url;
+				//input google map w/ combine url and address
+				
+				document.getElementById("name").innerHTML = items[i].Name;
+				document.getElementById("web").href = items[i].Website;
+				//use document add information in it
+				
+				document.getElementById("pic1").src = items[i].Picture1;
+				document.getElementById("pic1_txt").innerHTML = items[i].Picdescribe1;
+				//document.getElementById("picURL_1").setAttribute("href", items[i].Picture1);
+				document.getElementById("pic2").src = items[i].Picture2;
+				document.getElementById("pic2_txt").innerHTML = items[i].Picdescribe2;
+				//document.getElementById("picURL_2").setAttribute("href", items[i].Picture2);
+				document.getElementById("pic3").src = items[i].Picture3;
+				document.getElementById("pic3_txt").innerHTML = items[i].Picdescribe3;
+				//document.getElementById("picURL_3").setAttribute("href", items[i].Picture3);
+				//add picture and its describle into the doucument ass parameters
+				// !!-> setAttribute() here would cause something goes wrong
+								
+				document.getElementById("address").innerHTML = items[i].Add;
+				document.getElementById("description").innerHTML = items[i].Description;
+				document.getElementById("phone").innerHTML = items[i].Tel;
+				//same as above
+			}
+				
+			
+			function ListaPage(){
+				var str ="";
+				for(var i = 0 + (nowPage * 8); i < 8 + (nowPage * 8); i++){
+					var website = items[i].Website;
+					var address = items[i].Add;
+					var telphone =items[i].Tel;
+					var name = items[i].Name;
+					var pictureURL = items[i].Picture1;
+					if(i % 4 == 0) str += '<tr>';
+					str += '<td align="left">'+'<a href="javascript: void(0)" onclick="getInformation(' + i + ')" >';
+					str += '<img id="hotel_pic_' + i + '" src=' + pictureURL + ' width="320" height="240" alt="ㄅ、ㄅ欠～ㄇu照片喔"><br>';
+					str += '<font id="hotel_name_' + i + '" size="5">' + name + '</font><br><font id="hotel_address_' + i + '">';
+					str += address + '</font></a></td>';
+					
+					if(i % 4 == 3) str += '</tr>';
+				}
+				
+				table.innerHTML = str;
+				document.getElementById('nowPage').innerHTML = nowPage + 1;
+				//nowPage start with 0, but page that user see start with 1
+			}
+			
+			$(function(){
+				 $.ajax({
+					url: "http://140.134.26.71:58080/web-prog/Hotels",
+					type: 'GET',
+					dataType: 'json',
+					success: function(data) {
+						table = document.getElementById('hoteltable');
+						items = data.Infos.Info;
+						totalPage = items.length / 8;
+						nowPage = 0;
+						ListaPage();
+					 },
+					error: function() {
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+        <div>
+            <table id="hoteltable"></table>
+        </div>
+        <br>
+        <br>
+        <div style="float:none">
+        	<a class="button" onClick="lastPage()">Last Page</a>
+        	<span style="font-family: Impact, Haettenschweiler, 'Franklin Gothic Bold', 'Arial Black', sans-serif">Page.
+            <lable id ="nowPage"></lable>
+          	</span>
+          	<lable id ="nowPage"></lable>
+            <a class="button" onClick="nextPage()">Next Page</a><br>
+        </div>
+        
+        <br>
+ 	<div style = " width: 640px;">
+            <a href="javascript: void(0)" id="web"><h2 id="name">Choose a Hotel</h2></a>
+            
+            <h3> Address: </h3><p id="address"></p>
+            <h3> Telphone: </h3><p id="phone"></p>
+            <h4> About: </h4><p id="description" style="LINE-HEIGHT: 14pt "></p>
+            
+   	</div>
+        
+        <iframe id='maps' src="http://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q=&z=16&output=embed&t=" width="600" height="600" frameborder="0" style="border: 0; text-align: right;" allowfullscreen></iframe>
+        	
+   	<div class="4u"><span class="image fit">
+            	<!--<a id="picURL_1">-->
+                	<img src="" id="pic1" alt="ERR">
+                <!--</a>-->
+                <br>
+                <p id="pic1_txt" align="center"></p>
+                </span>
+            </div>
+			<div class="4u"><span class="image fit">
+            	<!--<a id="picURL_2">-->
+                	<img src="" id="pic2" alt="ERR">
+                <!--</a>-->
+                <br>
+                <lable id="pic2_txt" align="center"></lable>
+                </span>
+            </div>
+			<div class="4u$"><span class="image fit">
+            	<!--<a id="picURL_3">-->
+          			<img src="" id="pic3" alt="ERR">
+            	<!--</a>-->
+            	<br>
+            	<lable id="pic3_txt" align="center"></lable>
+                </span>
+            </div>
+	</body>
 </html>
-
-
